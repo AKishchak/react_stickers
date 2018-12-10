@@ -1,0 +1,14 @@
+
+.toolbar{
+    position: absolute;
+    z-index: 999;
+    bottom: 0;
+    top: 0;
+    .create-window-button{
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        background: #216a9f;
+        margin: 10px;
+    }
+}

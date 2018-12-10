@@ -1,0 +1,59 @@
+.sticker{
+    padding: 10px;
+    border: 1px solid #aaa;
+    display: flex;
+    position: absolute;
+    background: #222;
+    color: #fff;
+
+    flex-direction: column;
+    justify-content: stretch;
+    box-shadow: -9px 9px 21px rgb(0,0,0,0.3);
+    &.react-draggable-dragging {
+        .header{
+            input {
+                pointer-events:none;
+            }
+        }
+        .body {
+            textarea{
+                pointer-events:none;
+            }
+        }
+    }
+
+    .header{
+        border-bottom: 1px solid #bbb;
+        margin-bottom: 5px;
+        position: relative;
+        input {
+            background: transparent;
+            display: block;
+            border: none;
+            padding: 3px;
+            width: 100%;
+            font-size: 20px;
+            &:focus{
+                background: white;
+            }
+        }
+        .drag-handle{
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #bbb;
+            cursor: pointer;
+            right: 0;
+            top: 0;
+        }
+    }
+    .body{
+        flex-grow: 1;
+        display: flex;
+        textarea{
+            flex-grow: 1;
+            background: #00000008;
+            border: none;
+        }
+    }
+}
