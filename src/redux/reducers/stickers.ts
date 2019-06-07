@@ -6,7 +6,7 @@ export interface IStickerSettings {
     zIndex: number,
     top: number,
     left: number,
-    color: string
+    color: any
 }
 
 export interface IStickersState {
@@ -20,7 +20,8 @@ const createSticker = (list: any[], payload: any) :IStickerSettings => {
         zIndex: 10 + list.length,
         top: window.innerHeight / 4 + 10 * list.length,
         left: window.innerWidth / 4 + 10 * list.length,
-        color: randomColor({hue: 'yellow'})
+        color: randomColor({format: 'rgba', alpha: 0.5})
+        //    color: randomColor({hue: 'yellow', format: 'rgba', alpha: 0.5})
     };
 };
 
@@ -44,6 +45,12 @@ export const stickers = (state:IStickersState = initialState, action: any) => {
                         return Object.assign({ ...e}, action.payload);
                     }
                     return Object.assign({}, e);
+                })
+            };
+        case 'DELETE_STICKER':
+            return {
+                list: state.list.filter((e) => {
+                    return e.id !== action.payload.id;
                 })
             };
         default:

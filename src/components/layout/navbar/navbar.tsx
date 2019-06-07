@@ -5,7 +5,7 @@ import styled  from 'styled-components'
 const Nav = styled.nav`
 width: 100%;
 float: left;
-background: 
+background: rgba(219, 112, 147, .4);
 `;
 
 const List = styled.ul`

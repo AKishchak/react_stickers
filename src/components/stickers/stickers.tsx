@@ -5,11 +5,12 @@ import './stickerContainer.scss';
 import {IReduxState} from "../../redux";
 // import {IStickersState} from "../../redux/reducers";
 import {IStickerSettings} from "../../redux/reducers/stickers";
-import { Sticker } from '../base/sticker/Sticker'
+import { Sticker } from '../base/sticker/Sticker';
 
 export interface IStickerContainerProps {
     stickers: any,
     onStickerUpdate(updates: any, window: IStickerSettings): void;
+    deleteSticker(updates: any, window: IStickerSettings): void;
 }
 class StickerContainer extends React.Component<IStickerContainerProps, {}> {
 
@@ -30,11 +31,13 @@ class StickerContainer extends React.Component<IStickerContainerProps, {}> {
                 }, w);
                 const textHandler = (text: string) => this.props.onStickerUpdate({ text }, w);
                 const titleHandler = (text: string) => this.props.onStickerUpdate({ title: text }, w);
+                const deleteSticker = (event: any) => this.props.deleteSticker({event}, w);
                 return <Sticker {...w}
                                 handleStop={dragHandler}
                                 onTextChange={textHandler}
                                 onTitleChange={titleHandler}
-                                key={key}/>
+                                key={key}
+                                deleteSticker={deleteSticker}/>
             }) }
         </div>
     }
@@ -48,6 +51,10 @@ export default connect((state: IReduxState) => {
     return {
         onStickerUpdate(obj: any, w: IStickerSettings) {
             dispatch({ type: "STICKER_UPDATE", payload: Object.assign(obj, { id: w.id }) });
+        },
+        deleteSticker(obj: any, w: IStickerSettings) {
+            dispatch({type: "DELETE_STICKER", payload: Object.assign(obj, {id: w.id}) });
         }
+
     }
 })(StickerContainer);

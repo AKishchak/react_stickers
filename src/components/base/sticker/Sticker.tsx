@@ -16,6 +16,7 @@ export interface IStickerProps {
     handleDrag?(event: any, draggable: any): void;
     handleStart?(event: any, draggable: any): void;
     handleStop?(event: any, draggable: any): void;
+    deleteSticker?(event: any): void;
 }
 
 interface IStickerState {
@@ -34,7 +35,7 @@ export class Sticker extends React.Component<IStickerProps, IStickerState> {
         super(props);
         this.state = {
             width: this.props.defaultWidth || DEFAULT_FRAME.WIDTH,
-            height: this.props.defaultHeight || DEFAULT_FRAME.HEIGHT
+            height: this.props.defaultHeight || DEFAULT_FRAME.HEIGHT,
         };
     }
 
@@ -68,6 +69,7 @@ export class Sticker extends React.Component<IStickerProps, IStickerState> {
             }
         };
 
+
         return <Draggable onStart={this.props.handleStart}
                           onDrag={this.props.handleDrag}
                           onStop={this.props.handleStop}
@@ -77,8 +79,12 @@ export class Sticker extends React.Component<IStickerProps, IStickerState> {
         >
             <div className={'sticker'} style={styles}>
                 <div className="header">
-                    <input type="text" className={'sticker-title'} defaultValue={this.props.title} onChange={titleHandle}/>
-                    <div className={'drag-handle'} />
+                    <div className="header-top">
+                        <div />
+                        <div className={'drag-handle'} />
+                        <div className='delete' onClick={this.props.deleteSticker} />
+                    </div>
+                    <input type="text" className={'sticker-title'} defaultValue={this.props.title} placeholder="New Sticker" onChange={titleHandle}/>
                 </div>
                 <div className="body">
                     <textarea defaultValue={this.props.text} onChange={textHandle}/>

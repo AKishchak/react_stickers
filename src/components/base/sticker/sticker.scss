@@ -1,5 +1,5 @@
 .sticker{
-    padding: 10px;
+    /*padding: 10px;*/
     border: 1px solid #aaa;
     display: flex;
     position: absolute;
@@ -27,26 +27,40 @@
         border-bottom: 1px solid #bbb;
         margin-bottom: 5px;
         position: relative;
+        display: flex;
+        flex-direction: column;
         input {
-            background: transparent;
+            background: #00000008;
             display: block;
             border: none;
             padding: 3px;
             width: 100%;
             font-size: 20px;
-            &:focus{
-                background: white;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            .drag-handle {
+                align-self: center;
+                width: 50%;
+                height: 30px;
+                /*background: url("push-pin.svg");*/
+                background: rgba(1, 1, 1, .1);
+                cursor: crosshair;
+            }
+            .delete {
+                width: 30px;
+                height: 30px;
+                cursor: pointer;
+                background: url("./trash.svg");
+                &:hover {
+                    transform: scale(.9);
+                    transition: 1s;
+                }
             }
         }
-        .drag-handle{
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #bbb;
-            cursor: pointer;
-            right: 0;
-            top: 0;
-        }
+        .sticker-title {}
     }
     .body{
         flex-grow: 1;
@@ -55,6 +69,7 @@
             flex-grow: 1;
             background: #00000008;
             border: none;
+            font-style: italic;
         }
     }
 }

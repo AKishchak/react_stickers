@@ -1,14 +1,25 @@
 
 .toolbar{
-    position: absolute;
+    /*position: absolute;
     z-index: 999;
     bottom: 0;
-    top: 0;
+    top: 0;*/
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: rgba(121, 193, 244, .2);
     .create-window-button{
         padding: 10px 20px;
         border: none;
         cursor: pointer;
-        background: #216a9f;
+        background: #7ac1f4;
+        margin: 10px;
+    }
+    .login-button{
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        background: #7ac1f4;
         margin: 10px;
     }
 }

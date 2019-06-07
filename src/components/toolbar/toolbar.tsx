@@ -22,13 +22,28 @@ class ToolBar extends React.Component<IToolbarProps> {
         });
     }
 
+    /*private componentDidMount(): void {
+        Database.collection("stickers").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                this.props.addNewSticker([], doc._document.proto.fields)
+            });
+        });
+    }*/
+    //    this.props.stickers.list = [...this.props.stickers.list, doc._document.proto.fields];
+
     public render (){
-        return <div className="toolbar">
-            <button className='create-window-button' onClick={this.props.addNewSticker}>Add window</button>
-            <button className='create-window-button' onClick={this.props.pingRedux}>Action test</button>
-            <button onClick={this.firebaseOauth}>SignIn</button>
-            <button onClick={this.signOut}>SignOut</button>
-        </div>
+        return(
+            <div className="toolbar">
+                <div>
+                    <button className='create-window-button' onClick={this.props.addNewSticker}>Add window</button>
+                    <button className='create-window-button' onClick={this.props.pingRedux}>Action test</button>
+                </div>
+                <div>
+                    <button className='login-button' onClick={this.firebaseOauth}>SignIn</button>
+                    <button className='login-button' onClick={this.signOut}>SignOut</button>
+                </div>
+            </div>
+        )
     }
 
     private firebaseOauth() {
@@ -58,6 +73,9 @@ export default connect(null, (dispatch) => {
                 })
                 .then(res => {
                     console.log(res);
+                })
+                .catch((error) => {
+                    console.error("Error adding document: ", error);
                 });
             dispatch({ type: "NEW_STICKER", payload: {} });
         }
