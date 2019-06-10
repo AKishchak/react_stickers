@@ -1,8 +1,13 @@
-import randomColor = require('randomcolor')
+import randomColor = require('randomcolor');
+import * as firebase from 'firebase';
+import { Database } from '../../firebase';
+
 
 export interface IStickerSettings {
-    id: number,
+    id: string,
     text: string,
+    title: string,
+    content: string,
     zIndex: number,
     top: number,
     left: number,
@@ -15,22 +20,37 @@ export interface IStickersState {
 
 const createSticker = (list: any[], payload: any) :IStickerSettings => {
     return {
-        id: 100 + list.length,
-        text: payload.text,
+        id: payload.id,
+        text: payload.content,
+        title: payload.title,
+        content: payload.content,
         zIndex: 10 + list.length,
         top: window.innerHeight / 4 + 10 * list.length,
         left: window.innerWidth / 4 + 10 * list.length,
-        color: randomColor({format: 'rgba', alpha: 0.5})
+        color: randomColor({format: 'rgba', alpha: 0.9})
         //    color: randomColor({hue: 'yellow', format: 'rgba', alpha: 0.5})
     };
 };
-
 const initialState = {
     list: []
 };
+/*const initialState = {
+    list: Database.collection("stickers").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            Object.assign({}, doc._document.proto.fields)
+        });
+    })
+};*/
 
 export const stickers = (state:IStickersState = initialState, action: any) => {
     switch (action.type) {
+        case 'GET_STICKERS':
+            return {
+                list: [
+                    ...state.list,
+                    createSticker(state.list, action.payload)
+                ]
+            };
         case 'NEW_STICKER':
             return {
                 list: [
@@ -57,3 +77,11 @@ export const stickers = (state:IStickersState = initialState, action: any) => {
             return state;
     }
 };
+
+/*
+Database.collection("stickers").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                Object.assign({}, doc._document.proto.fields);
+            });
+        });
+*/

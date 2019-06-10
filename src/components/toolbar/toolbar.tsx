@@ -3,11 +3,13 @@ import * as React from "react";
 import { connect } from 'react-redux'
 import { Database } from '../../firebase'
 import './toolbar.scss';
+import {IStickerSettings} from "../../redux/reducers/stickers";
 
 interface IToolbarProps {
     addNewSticker() : void,
     pingRedux() : void
 }
+export const userId = null;
 
 class ToolBar extends React.Component<IToolbarProps> {
     public constructor(props: IToolbarProps) {
@@ -15,21 +17,20 @@ class ToolBar extends React.Component<IToolbarProps> {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 console.log(user);
-                console.log("SIGNED IN")
+                console.log("SIGNED IN");
+                userId = user.uid;
+                this.props.getStickers();
             } else {
                 console.log("NOT SIGNED IN")
+                userId = null;
             }
         });
     }
 
-    /*private componentDidMount(): void {
-        Database.collection("stickers").get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                this.props.addNewSticker([], doc._document.proto.fields)
-            });
-        });
-    }*/
-    //    this.props.stickers.list = [...this.props.stickers.list, doc._document.proto.fields];
+    private componentDidMount(): void {
+
+    }
+
 
     public render (){
         return(
@@ -62,13 +63,12 @@ class ToolBar extends React.Component<IToolbarProps> {
     }
 }
 
-
 export default connect(null, (dispatch) => {
     return {
         pingRedux: () => { console.log("1223") },
         addNewSticker: () => {
-                Database.collection('stickers').add({
-                    title: 'TEST',
+                Database.collection(userId || 'stickers').add({
+                    title: 'NEW_STICKER',
                     content: "NEW ONE"
                 })
                 .then(res => {
@@ -78,6 +78,18 @@ export default connect(null, (dispatch) => {
                     console.error("Error adding document: ", error);
                 });
             dispatch({ type: "NEW_STICKER", payload: {} });
+        },
+        getStickers(obj: any, w: IStickerSettings) {
+            Database.collection(userId || 'stickers').get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    dispatch({ type: "GET_STICKERS", payload: {
+                        id: doc.id,
+                        title: doc._document.proto.fields.title.stringValue === 'NEW_STICKER' ? null : doc._document.proto.fields.title.stringValue,
+                        content: doc._document.proto.fields.content.stringValue === 'NEW ONE' ? null : doc._document.proto.fields.content.stringValue
+                        } });
+                });
+            });
         }
     }
 })(ToolBar)
+
