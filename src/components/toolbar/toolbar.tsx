@@ -7,7 +7,8 @@ import {IStickerSettings} from "../../redux/reducers/stickers";
 
 interface IToolbarProps {
     addNewSticker() : void,
-    pingRedux() : void
+    pingRedux() : void,
+    getStickers() : void
 }
 export const userId = null;
 
@@ -16,12 +17,11 @@ class ToolBar extends React.Component<IToolbarProps> {
         super(props);
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-                console.log(user);
                 console.log("SIGNED IN");
                 userId = user.uid;
                 this.props.getStickers();
             } else {
-                console.log("NOT SIGNED IN")
+                console.log("NOT SIGNED IN");
                 userId = null;
             }
         });
@@ -69,7 +69,8 @@ export default connect(null, (dispatch) => {
         addNewSticker: () => {
                 Database.collection(userId || 'stickers').add({
                     title: 'NEW_STICKER',
-                    content: "NEW ONE"
+                    content: "NEW ONE",
+                    uid: userId
                 })
                 .then(res => {
                     console.log(res);
@@ -80,15 +81,20 @@ export default connect(null, (dispatch) => {
             dispatch({ type: "NEW_STICKER", payload: {} });
         },
         getStickers(obj: any, w: IStickerSettings) {
+            dispatch({ type: "GET_STICKERS", payload: {} });
+
+            // effect
             Database.collection(userId || 'stickers').get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    dispatch({ type: "GET_STICKERS", payload: {
-                        id: doc.id,
-                        title: doc._document.proto.fields.title.stringValue === 'NEW_STICKER' ? null : doc._document.proto.fields.title.stringValue,
-                        content: doc._document.proto.fields.content.stringValue === 'NEW ONE' ? null : doc._document.proto.fields.content.stringValue
+                    dispatch({ type: "GET_STICKERS_COMPLETED", payload: {
+                            id: doc.id,
+                            uid: doc._document.proto.fields.uid.stringValue,
+                            title: doc._document.proto.fields.title.stringValue === 'NEW_STICKER' ? null : doc._document.proto.fields.title.stringValue,
+                            content: doc._document.proto.fields.content.stringValue === "NEW ONE" ? null : doc._document.proto.fields.content.stringValue
                         } });
                 });
             });
+
         }
     }
 })(ToolBar)

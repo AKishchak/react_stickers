@@ -5,6 +5,7 @@ import { Database } from '../../firebase';
 
 export interface IStickerSettings {
     id: string,
+    uid: string,
     text: string,
     title: string,
     content: string,
@@ -21,6 +22,7 @@ export interface IStickersState {
 const createSticker = (list: any[], payload: any) :IStickerSettings => {
     return {
         id: payload.id,
+        uid: payload.uid,
         text: payload.content,
         title: payload.title,
         content: payload.content,
