@@ -5,7 +5,6 @@ import { Database } from '../../firebase';
 
 export interface IStickerSettings {
     id: string,
-    uid: string,
     text: string,
     title: string,
     content: string,
@@ -21,8 +20,7 @@ export interface IStickersState {
 
 const createSticker = (list: any[], payload: any) :IStickerSettings => {
     return {
-        id: payload.id,
-        uid: payload.uid,
+        id: Math.random().toString(),
         text: payload.content,
         title: payload.title,
         content: payload.content,
@@ -31,22 +29,22 @@ const createSticker = (list: any[], payload: any) :IStickerSettings => {
         left: window.innerWidth / 4 + 10 * list.length,
         color: randomColor({format: 'rgba', alpha: 0.9})
         //    color: randomColor({hue: 'yellow', format: 'rgba', alpha: 0.5})
-    };
+    }
 };
-const initialState = {
+export const initialState = {
     list: []
 };
-/*const initialState = {
-    list: Database.collection("stickers").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            Object.assign({}, doc._document.proto.fields)
-        });
-    })
-};*/
 
 export const stickers = (state:IStickersState = initialState, action: any) => {
     switch (action.type) {
-        case 'GET_STICKERS':
+        case 'SET_STICKERS':
+            return {
+                list: [
+                    ...action.payload,
+                    // createSticker(state.list, action.payload)
+                ]
+            };
+        case 'GET_STICKERS_COMPLETED':
             return {
                 list: [
                     ...state.list,

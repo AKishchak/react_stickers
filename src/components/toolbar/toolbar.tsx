@@ -10,7 +10,7 @@ interface IToolbarProps {
     pingRedux() : void,
     getStickers() : void
 }
-export const userId = null;
+export let userId = null;
 
 class ToolBar extends React.Component<IToolbarProps> {
     public constructor(props: IToolbarProps) {
@@ -19,16 +19,17 @@ class ToolBar extends React.Component<IToolbarProps> {
             if (user) {
                 console.log("SIGNED IN");
                 userId = user.uid;
-                this.props.getStickers();
+                // this.props.getStickers();
             } else {
                 console.log("NOT SIGNED IN");
                 userId = null;
             }
         });
+
     }
 
     private componentDidMount(): void {
-
+        this.props.getStickers();
     }
 
 
@@ -36,7 +37,7 @@ class ToolBar extends React.Component<IToolbarProps> {
         return(
             <div className="toolbar">
                 <div>
-                    <button className='create-window-button' onClick={this.props.addNewSticker}>Add window</button>
+                    <button className='create-window-button' onClick={() => this.props.addNewSticker()}>Add window</button>
                     <button className='create-window-button' onClick={this.props.pingRedux}>Action test</button>
                 </div>
                 <div>
@@ -67,24 +68,24 @@ export default connect(null, (dispatch) => {
     return {
         pingRedux: () => { console.log("1223") },
         addNewSticker: () => {
-                Database.collection(userId || 'stickers').add({
-                    title: 'NEW_STICKER',
-                    content: "NEW ONE",
-                    uid: userId
+              /* Database.collection(userId).add({
+                        title: 'NEW_STICKER',
+                        content: "NEW ONE",
+                        uid: userId
                 })
                 .then(res => {
                     console.log(res);
                 })
                 .catch((error) => {
                     console.error("Error adding document: ", error);
-                });
+                });*/
             dispatch({ type: "NEW_STICKER", payload: {} });
         },
         getStickers(obj: any, w: IStickerSettings) {
-            dispatch({ type: "GET_STICKERS", payload: {} });
-
+           dispatch({type: "GET_STICKERS", payload: {} });
+        }
             // effect
-            Database.collection(userId || 'stickers').get().then((querySnapshot) => {
+            /*Database.collection(userId || 'stickers').get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     dispatch({ type: "GET_STICKERS_COMPLETED", payload: {
                             id: doc.id,
@@ -95,7 +96,6 @@ export default connect(null, (dispatch) => {
                 });
             });
 
-        }
+        }*/
     }
 })(ToolBar)
-
