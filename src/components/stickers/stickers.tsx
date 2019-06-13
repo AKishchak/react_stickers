@@ -23,15 +23,21 @@ class StickerContainer extends React.Component<IStickerContainerProps, {}> {
         };
     }
 
+    /*componentDidUpdate(prevProps, prevState) {
+        if (prevProps.stickers.list !== this.props.stickers.list) {
+            this.props.databaseUpdate()
+        }
+    }*/
+
     public render() {
         return <div className={'sticker-container'}>
             { this.props.stickers.list.map((w:any, key:any) => {
                 const dragHandler = (event: any, d: any) => this.props.onStickerUpdate({
                     left: d.x,
-                    top: d.y
+                    top: d.y,
                 }, w);
-                const textHandler = (text: string) => this.props.onStickerUpdate({ content: text }, w);
-                const titleHandler = (text: string) => this.props.onStickerUpdate({ title: text }, w);
+                const textHandler = (text: string) => this.props.onStickerUpdate({ content: text.toString()}, w);
+                const titleHandler = (text: string) => this.props.onStickerUpdate({ title: text.toString() }, w);
                 const deleteSticker = (event: any) => this.props.deleteSticker({event}, w);
                 return <Sticker {...w}
                                 handleStop={dragHandler}
@@ -52,12 +58,16 @@ export default connect((state: IReduxState) => {
     return {
         onStickerUpdate(obj: any, w: IStickerSettings) {
             //    Database.collection('' + w.uid).doc('' + w.id).update(Object.assign({}, obj)).then(() => {
-                dispatch({ type: "STICKER_UPDATE", payload: Object.assign(obj, { id: w.id }) });
+                dispatch({ type: "STICKER_UPDATE", payload: Object.assign(obj, { w }) });
             },
 
         deleteSticker(obj: any, w: IStickerSettings) {
             //    Database.collection('' + w.uid).doc('' + w.id).delete()
-            dispatch({type: "DELETE_STICKER", payload: Object.assign(obj, {id: w.id}) });
+            console.log(w);
+            dispatch({type: "DELETE_STICKER", payload: Object.assign(obj, {id: w.id,}) });
+        },
+        databaseUpdate(obj: any, w: IStickerSettings) {
+            dispatch({type: "DATABASE_UPDATE", payload: {}});
         }
     }
 })(StickerContainer);

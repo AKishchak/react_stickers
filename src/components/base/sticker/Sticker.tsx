@@ -4,6 +4,7 @@ import './sticker.scss';
 
 export interface IStickerProps {
     title: string;
+    content: string;
     text: string;
     defaultWidth?: number;
     defaultHeight?: number;
@@ -87,7 +88,7 @@ export class Sticker extends React.Component<IStickerProps, IStickerState> {
                     <input type="text" className={'sticker-title'} defaultValue={this.props.title} placeholder="New Sticker" onChange={titleHandle}/>
                 </div>
                 <div className="body">
-                    <textarea defaultValue={this.props.text} onChange={textHandle}/>
+                    <textarea defaultValue={this.props.content} onChange={textHandle} />
                 </div>
             </div>
         </Draggable>

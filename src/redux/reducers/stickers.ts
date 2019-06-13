@@ -20,7 +20,7 @@ export interface IStickersState {
 
 const createSticker = (list: any[], payload: any) :IStickerSettings => {
     return {
-        id: Math.random().toString(),
+        id: payload.id,
         text: payload.content,
         title: payload.title,
         content: payload.content,
@@ -79,9 +79,6 @@ export const stickers = (state:IStickersState = initialState, action: any) => {
 };
 
 /*
-Database.collection("stickers").get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                Object.assign({}, doc._document.proto.fields);
-            });
-        });
+state.list.filter((e) => {
+                    return e.id !== action.payload.id;
 */
