@@ -2,15 +2,19 @@ import * as firebase from 'firebase';
 import { Database } from '../firebase';
 import { all } from 'redux-saga/effects';
 import { takeEvery, put, all, call, take } from 'redux-saga/effects';
-import { eventChannel, END } from 'redux-saga';
 import randomColor = require('randomcolor');
-import {object} from "prop-types";
+import userId from '../components/toolbar/toolbar';
 
 function* handleGetStickers() {
-
-    let list = yield Database.collection("ilT52SazwGMnzbQqhqQWtNhx95P2").get().then((querySnapshot) => {
-        console.log(querySnapshot)
-        let list = querySnapshot.docs.map((doc) => {
+    const user = firebase.auth().currentUser;
+    console.log('user', userId);
+    /*while(!user) {
+        user = firebase.auth().currentUser;
+        console.log('user', user);
+    }*/
+    const list = yield Database.collection("ilT52SazwGMnzbQqhqQWtNhx95P2").get().then((querySnapshot) => {
+        console.log(querySnapshot);
+        const list = querySnapshot.docs.map((doc) => {
             return {
                 id: doc._document.proto.fields.id.stringValue,
                 title: doc._document.proto.fields.title.stringValue,
@@ -29,9 +33,9 @@ function* handleGetStickers() {
 }
 
 function* handleAddSticker() {
-    let stickerId = Math.random().toString();
-    let length = yield Database.collection("ilT52SazwGMnzbQqhqQWtNhx95P2").get().then((querySnapshot) => querySnapshot.docs.length);
-    let sticker = yield Database.collection("ilT52SazwGMnzbQqhqQWtNhx95P2").doc(stickerId).set({
+    const stickerId = Math.random().toString();
+    const length = yield Database.collection("ilT52SazwGMnzbQqhqQWtNhx95P2").get().then((querySnapshot) => querySnapshot.docs.length);
+    const sticker = yield Database.collection("ilT52SazwGMnzbQqhqQWtNhx95P2").doc(stickerId).set({
         id: stickerId,
         title: 'NEW_STICKER',
         content: 'NEW ONE',
@@ -51,18 +55,10 @@ function* handleAddSticker() {
 }
 
 function* handleUpdateSticker(action: { type: string, payload: any }) {
-    console.log( action.payload)
+    console.log('action.payload', action.payload);
     yield Database.collection("ilT52SazwGMnzbQqhqQWtNhx95P2")
-        .doc(action.payload.w.id)
-        .set(Object.assign({...action.payload.w},{
-            id: action.payload.w.id,
-            title: action.payload.title || action.payload.w.title,
-            content: action.payload.content || action.payload.w.content,
-            zIndex: action.payload.w.zIndex,
-            top: action.payload.top || action.payload.w.top,
-            left: action.payload.left || action.payload.w.left,
-            color: action.payload.w.color
-        }));
+        .doc(action.payload.id)
+        .update(action.payload);
 
     yield put({ type: 'UPDATE', payload: action.payload.id })
 }

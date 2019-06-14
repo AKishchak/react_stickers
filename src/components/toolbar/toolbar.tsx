@@ -1,16 +1,17 @@
 import * as firebase from 'firebase';
 import * as React from "react";
 import { connect } from 'react-redux'
-import { Database } from '../../firebase'
 import './toolbar.scss';
 import {IStickerSettings} from "../../redux/reducers/stickers";
+import {rejects} from "assert";
 
 interface IToolbarProps {
     addNewSticker() : void,
     pingRedux() : void,
     getStickers() : void
 }
-export let userId = null;
+
+let userId: string;
 
 class ToolBar extends React.Component<IToolbarProps> {
     public constructor(props: IToolbarProps) {
@@ -19,16 +20,14 @@ class ToolBar extends React.Component<IToolbarProps> {
             if (user) {
                 console.log("SIGNED IN");
                 userId = user.uid;
-                // this.props.getStickers();
             } else {
                 console.log("NOT SIGNED IN");
-                userId = null;
             }
         });
 
     }
 
-    private componentDidMount(): void {
+    public componentDidMount(): void {
         this.props.getStickers();
     }
 
@@ -81,7 +80,7 @@ export default connect(null, (dispatch) => {
                 });*/
             dispatch({ type: "NEW_STICKER", payload: {} });
         },
-        getStickers(obj: any, w: IStickerSettings) {
+        getStickers: () => {
            dispatch({type: "GET_STICKERS", payload: {} });
         }
             // effect

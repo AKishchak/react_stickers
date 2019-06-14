@@ -6,7 +6,6 @@ import {IReduxState} from "../../redux";
 // import {IStickersState} from "../../redux/reducers";
 import {IStickerSettings} from "../../redux/reducers/stickers";
 import { Sticker } from '../base/sticker/Sticker';
-import {Database} from "../../firebase";
 
 export interface IStickerContainerProps {
     stickers: any,
@@ -57,17 +56,11 @@ export default connect((state: IReduxState) => {
 }, (dispatch) => {
     return {
         onStickerUpdate(obj: any, w: IStickerSettings) {
-            //    Database.collection('' + w.uid).doc('' + w.id).update(Object.assign({}, obj)).then(() => {
-                dispatch({ type: "STICKER_UPDATE", payload: Object.assign(obj, { w }) });
-            },
+            dispatch({ type: "STICKER_UPDATE", payload: Object.assign(obj, { id: w.id }) });
+        },
 
         deleteSticker(obj: any, w: IStickerSettings) {
-            //    Database.collection('' + w.uid).doc('' + w.id).delete()
-            console.log(w);
             dispatch({type: "DELETE_STICKER", payload: Object.assign(obj, {id: w.id,}) });
-        },
-        databaseUpdate(obj: any, w: IStickerSettings) {
-            dispatch({type: "DATABASE_UPDATE", payload: {}});
         }
     }
 })(StickerContainer);
